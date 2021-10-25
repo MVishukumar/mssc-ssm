@@ -12,8 +12,6 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 
-import javax.swing.plaf.nimbus.State;
-
 @RequiredArgsConstructor
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -22,6 +20,7 @@ public class PaymentServiceImpl implements PaymentService {
 
   private final PaymentRepository paymentRepository;
   private final StateMachineFactory<PaymentState, PaymentEvent> stateMachineFactory;
+  private final PaymentStateChangeInterceptor paymentStateChangeInterceptor;
 
   @Override
   public Payment newPayment(Payment payment) {
@@ -70,6 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     stateMachine.getStateMachineAccessor()
         .doWithAllRegions(paymentStatePaymentEventStateMachineAccess -> {
+          paymentStatePaymentEventStateMachineAccess.addStateMachineInterceptor(paymentStateChangeInterceptor);
           paymentStatePaymentEventStateMachineAccess.resetStateMachine(new DefaultStateMachineContext<>(payment.getState(),null,null,null));
         });
 
