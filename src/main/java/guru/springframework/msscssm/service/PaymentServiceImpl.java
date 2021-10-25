@@ -8,10 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.swing.plaf.PanelUI;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
@@ -34,7 +38,7 @@ public class PaymentServiceImpl implements PaymentService {
   public StateMachine<PaymentState, PaymentEvent> preAuth(Long paymentId) {
     StateMachine<PaymentState, PaymentEvent> stateMachine = build(paymentId);
 
-    sendEvent(paymentId, stateMachine, PaymentEvent.PRE_AUTH_APPROVED);
+    sendEvent(paymentId, stateMachine, PaymentEvent.PRE_AUTHORIZE);
     return stateMachine;
   }
 
@@ -81,4 +85,5 @@ public class PaymentServiceImpl implements PaymentService {
 
     return stateMachine;
   }
+
 }
